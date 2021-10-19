@@ -18,12 +18,15 @@ public final class NovelReader: UIViewController {
 
     fileprivate func setupAppearance() {
         view.backgroundColor = .systemRed
-        modalPresentationStyle = .overFullScreen
         navigationController?.isNavigationBarHidden = true
     }
     
+    @objc fileprivate func pressBtn(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     fileprivate func setupWidgetAction() {
-        
+        btn.addTarget(self, action: #selector(pressBtn(_:)), for: .touchUpInside)
     }
     
     fileprivate func setupWidgetLayout() {
@@ -39,6 +42,15 @@ public final class NovelReader: UIViewController {
         setupAppearance()
         setupWidgetLayout()
         setupWidgetAction()
+    }
+    
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nil, bundle: nil)
+        self.modalPresentationStyle = .overFullScreen
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     deinit {

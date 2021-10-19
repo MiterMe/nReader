@@ -25,10 +25,10 @@ Pod::Spec.new do |spec|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   spec.description  = <<-DESC
-  一个中庸的电子书阅读器
+  一个中庸的，高定制化电子书阅读器，方便开发阅读类应用。
                    DESC
 
-  spec.homepage     = "http://miter.me/nReader"
+  spec.homepage     = "https://github.com/MiterMe/nReader"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -63,6 +63,8 @@ Pod::Spec.new do |spec|
   #  If this Pod runs only on iOS or OS X, then specify the platform and
   #  the deployment target. You can optionally include the target after the platform.
   #
+
+  spec.swift_versions = ['5.0']
 
   # spec.platform     = :ios
   spec.platform     = :ios, "13.0"

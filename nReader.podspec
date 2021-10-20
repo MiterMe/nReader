@@ -53,9 +53,10 @@ Pod::Spec.new do |spec|
   #  profile URL.
   #
 
-  spec.author             = { "miter" => "miter.me@outlook.com" }
   # Or just: spec.author    = "miter"
-  # spec.authors            = { "miter" => "miter.me@outlook.com" }
+  spec.authors            = { "miter" => "miter.me@outlook.com", 
+                              "iXunlong" => "Michael_jay@foxmail.com", 
+                              "xuyou5566" => "xuyou_5566@126.com" }
   # spec.social_media_url   = "https://twitter.com/miter"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

@@ -54,7 +54,7 @@ public protocol NovelReaderDataSource {
 
 }
 
-extension NovelReaderDataSource {
+public extension NovelReaderDataSource {
     
     
     func novelReaderIllustration(_ reader: NovelReader, chapterForIndexAt index: Int, afterObtained callback: @escaping ([NovelReaderPage]?)->Void) {

@@ -21,7 +21,7 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     
 
     fileprivate func setupAppearance() {
-        view.backgroundColor = .systemRed
+        view.backgroundColor = dataSource.colorSchema(for: self).backColor
         navigationController?.isNavigationBarHidden = true
     }
     

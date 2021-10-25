@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Chapter {
-    let id: Int
-    let Title: String
+public protocol Chapter {
+    var title: String { get }
+    var content: String { get }
 }

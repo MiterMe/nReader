@@ -7,34 +7,96 @@
 
 import UIKit
 
-public final class NovelReader: UIViewController {
+public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     
-    let btn: UIButton = {
-        let widget = UIButton()
-        widget.translatesAutoresizingMaskIntoConstraints = false
-        widget.setTitle("Test", for: .normal)
-        return widget
-    }()
+    var dataSource: NovelReaderDataSource
+    var delegate: NovelReaderDelegate?
+    var currentProgress: ReadProgress
+    var currentChapterIndex: Int
+    
+    weak var menuView: NovelReaderMenuView?
+    
+    var contentController: ContentController?
+    var bannerController: BannerController?
+    
 
     fileprivate func setupAppearance() {
         view.backgroundColor = .systemRed
         navigationController?.isNavigationBarHidden = true
     }
     
-    @objc fileprivate func pressBtn(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     fileprivate func setupWidgetAction() {
-        btn.addTarget(self, action: #selector(pressBtn(_:)), for: .touchUpInside)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
+        tap.delegate = self
+        view.addGestureRecognizer(tap)
     }
     
     fileprivate func setupWidgetLayout() {
-        view.addSubview(btn)
-        NSLayoutConstraint.activate([
-            btn.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            btn.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
+        contentController = makeContentController()
+        bannerController = dataSource.bannerController(for: self)
+        
+        guard let cc = contentController else { fatalError() }
+        
+        cc.view.translatesAutoresizingMaskIntoConstraints = false
+        self.addChild(cc)
+        view.insertSubview(cc.view, at: 0)
+        
+        if let bc = bannerController {
+            bc.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                bc.view.heightAnchor.constraint(equalToConstant: dataSource.bannerHeight(for: self))
+            ])
+            self.addChild(bc)
+            view.insertSubview(bc.view, at: 1)
+            
+            switch dataSource.bannerPosition(for: self) {
+            case .top:
+                NSLayoutConstraint.activate([
+                    bc.view.topAnchor.constraint(equalTo: view.topAnchor),
+                    bc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    bc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    cc.view.topAnchor.constraint(equalTo: bc.view.bottomAnchor),
+                    cc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    cc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    cc.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                ])
+            case .bottom, .none:
+                NSLayoutConstraint.activate([
+                    cc.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                    cc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    cc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    cc.view.bottomAnchor.constraint(equalTo: bc.view.topAnchor),
+                    bc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    bc.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                    bc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                ])
+            }
+        } else {
+            NSLayoutConstraint.activate([
+                cc.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                cc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                cc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                cc.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            ])
+        }
+    }
+    
+    fileprivate func makeContentController() -> ContentController {
+        
+        let controller: ContentController
+        
+        switch dataSource.pageTurning(for: self) {
+        case .horizontalCurl:
+            controller = ContentController(reader: self, transitionStyle: .pageCurl, navigationOrientation: .horizontal, options: nil)
+        case .horizontalScroll:
+            controller = ContentController(reader: self, transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        case .verticalCurl:
+            controller = ContentController(reader: self, transitionStyle: .pageCurl, navigationOrientation: .vertical, options: nil)
+        case .verticalScroll:
+            controller = ContentController(reader: self, transitionStyle: .scroll, navigationOrientation: .vertical, options: nil)
+        }
+        
+        return controller
     }
     
     public override func viewDidLoad() {
@@ -44,7 +106,11 @@ public final class NovelReader: UIViewController {
         setupWidgetAction()
     }
     
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    public init(dataSource: NovelReaderDataSource, delegate: NovelReaderDelegate? = nil, from: ReadProgress = .head) {
+        self.dataSource = dataSource
+        self.delegate = delegate
+        self.currentProgress = from
+        self.currentChapterIndex = self.currentProgress.index
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .overFullScreen
     }
@@ -57,4 +123,46 @@ public final class NovelReader: UIViewController {
         Swift.debugPrint("Debug: Deinit \(self)")
     }
     
+    @objc fileprivate func tapAction(_ sender: Any) {
+        
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if view == touch.view {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+// MARK: - 对外提供的接口
+    
+    public func openReaderMenu() {
+        if let menu = dataSource.menuView(for: self) {
+            menuView = menu
+        } else {
+            let menu = NovelReaderDefaultMenuView(self)
+            menuView = menu
+        }
+        UIView.animate(withDuration: 0.5) {
+            self.view.addSubview(self.menuView!)
+        }
+        
+    }
+    
+    public func novelReaderExit(_ exitType: ExitType) {
+        delegate?.novelReader(self, willExitAt: currentProgress, becauseOf: exitType)
+        
+        self.dismiss(animated: true) {
+            self.delegate?.novelReader(self, didExitedAt: self.currentProgress, becauseOf: exitType)
+        }
+    }
+    
+    public func currentPagesCount() -> Int {
+        return contentController?.pagesCount ?? 0
+    }
+    
+    public func currentPageIndex() -> Int {
+        return contentController?.pageIndex ?? 0
+    }
 }

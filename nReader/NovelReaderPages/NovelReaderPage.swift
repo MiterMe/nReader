@@ -46,4 +46,8 @@ open class NovelReaderPage: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        Swift.debugPrint("Debug: Deinit \(self)")
+    }
+    
 }

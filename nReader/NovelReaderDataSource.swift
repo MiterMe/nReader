@@ -19,6 +19,9 @@ public protocol NovelReaderDataSource {
     /// 根据index获取对应的插页（广告页）（异步），获取后调用callback
     func novelReaderIllustration(_ reader: NovelReader, chapterForIndexAt index: Int, afterObtained callback: @escaping ([NovelReaderPage]?)->Void)
     
+    /// 返回阅读器打开后显示的书面封皮页面
+    func novelReaderCover(for reader: NovelReader) -> NovelReaderPage?
+    
     /// 返回阅读器中banner广告位置
     func bannerPosition(for reader: NovelReader) -> BannerPosition
     
@@ -26,16 +29,16 @@ public protocol NovelReaderDataSource {
     func bannerHeight(for reader: NovelReader) -> CGFloat
     
     /// 返回阅读器中banner广告
-    func bannerController(for reader: NovelReader) -> BannerController?
+    func bannerController(for reader: NovelReader) -> UIViewController?
     
     /// 返回阅读器页眉
-    func readerHeaders(in reader: NovelReader) -> UIView?
+    func readerHeaders(in reader: NovelReader, countOfPages pagesCount: Int, AtPageIndex pageIndex: Int, andChapterIndex chpaterIndex: Int) -> UIView?
     
     /// 返回阅读器页眉高度
     func readerHeadersHeight(in reader: NovelReader) -> CGFloat
     
     /// 返回阅读器页脚
-    func readerFooters(in reader: NovelReader) -> UIView?
+    func readerFooters(in reader: NovelReader, countOfPages pagesCount: Int, AtPageIndex pageIndex: Int, andChapterIndex chpaterIndex: Int) -> UIView?
     
     /// 返回阅读器页脚高度
     func readerFootersHeight(in reader: NovelReader) -> CGFloat
@@ -61,6 +64,10 @@ public extension NovelReaderDataSource {
         callback(nil)
     }
     
+    func novelReaderCover(for reader: NovelReader) -> NovelReaderPage? {
+        return nil
+    }
+    
     func bannerPosition(for reader: NovelReader) -> BannerPosition {
         return .none
     }
@@ -69,11 +76,11 @@ public extension NovelReaderDataSource {
         return 0
     }
     
-    func bannerController(for reader: NovelReader) -> BannerController? {
+    func bannerController(for reader: NovelReader) -> UIViewController? {
         return nil
     }
     
-    func readerHeaders(in reader: NovelReader) -> UIView? {
+    func readerHeaders(in reader: NovelReader, countOfPages pagesCount: Int, AtPageIndex pageIndex: Int, andChapterIndex chpaterIndex: Int) -> UIView? {
         return nil
     }
     
@@ -81,7 +88,7 @@ public extension NovelReaderDataSource {
         return 0
     }
     
-    func readerFooters(in reader: NovelReader) -> UIView? {
+    func readerFooters(in reader: NovelReader, countOfPages pagesCount: Int, AtPageIndex pageIndex: Int, andChapterIndex chpaterIndex: Int) -> UIView? {
         return nil
     }
     

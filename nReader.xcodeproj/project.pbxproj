@@ -18,7 +18,6 @@
 		52C14EA1272008AF009C6609 /* NovelReaderMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EA0272008AF009C6609 /* NovelReaderMenuView.swift */; };
 		52C14EA327200D10009C6609 /* NovelReaderDefaultMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EA227200D10009C6609 /* NovelReaderDefaultMenuView.swift */; };
 		52C14EA527201E07009C6609 /* ContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EA427201E07009C6609 /* ContentController.swift */; };
-		52C14EA727201EA5009C6609 /* BannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EA627201EA5009C6609 /* BannerController.swift */; };
 		52C14EAB27226DD6009C6609 /* NovelReaderPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EAA27226DD6009C6609 /* NovelReaderPage.swift */; };
 		52C14EAD27226F94009C6609 /* ColorSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EAC27226F94009C6609 /* ColorSchema.swift */; };
 		52C14EAF27229BB0009C6609 /* NovelReaderPageLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14EAE27229BB0009C6609 /* NovelReaderPageLoading.swift */; };
@@ -38,7 +37,6 @@
 		52C14EA0272008AF009C6609 /* NovelReaderMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderMenuView.swift; sourceTree = "<group>"; };
 		52C14EA227200D10009C6609 /* NovelReaderDefaultMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderDefaultMenuView.swift; sourceTree = "<group>"; };
 		52C14EA427201E07009C6609 /* ContentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentController.swift; sourceTree = "<group>"; };
-		52C14EA627201EA5009C6609 /* BannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerController.swift; sourceTree = "<group>"; };
 		52C14EAA27226DD6009C6609 /* NovelReaderPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderPage.swift; sourceTree = "<group>"; };
 		52C14EAC27226F94009C6609 /* ColorSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSchema.swift; sourceTree = "<group>"; };
 		52C14EAE27229BB0009C6609 /* NovelReaderPageLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderPageLoading.swift; sourceTree = "<group>"; };
@@ -78,7 +76,6 @@
 				52C14EB027229BBF009C6609 /* NovelReaderPages */,
 				52C14E70271EC8CB009C6609 /* NovelReader.swift */,
 				52C14EA427201E07009C6609 /* ContentController.swift */,
-				52C14EA627201EA5009C6609 /* BannerController.swift */,
 				52C14EA0272008AF009C6609 /* NovelReaderMenuView.swift */,
 				52C14EA227200D10009C6609 /* NovelReaderDefaultMenuView.swift */,
 				52C14E92271EDA93009C6609 /* NovelReaderDataSource.swift */,
@@ -193,7 +190,6 @@
 				52C14EA1272008AF009C6609 /* NovelReaderMenuView.swift in Sources */,
 				52C14EA527201E07009C6609 /* ContentController.swift in Sources */,
 				52C14E9D271FF7B5009C6609 /* ExitType.swift in Sources */,
-				52C14EA727201EA5009C6609 /* BannerController.swift in Sources */,
 				52C14E95271EDAAA009C6609 /* NovelReaderDelegate.swift in Sources */,
 				52C14E9B271FF014009C6609 /* ReadProgress.swift in Sources */,
 				52C14E9F271FFE01009C6609 /* PageTurningType.swift in Sources */,

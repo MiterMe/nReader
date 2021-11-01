@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-internal final class ContentController: UIPageViewController {
-    
+internal final class ContentController: UIPageViewController, UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+
     weak var reader: NovelReader?
     
     var realSafeAreaInsets: UIEdgeInsets? = nil
@@ -33,7 +33,8 @@ internal final class ContentController: UIPageViewController {
     }
 
     fileprivate func setupWidgetAction() {
-
+        self.delegate = self
+        self.dataSource = self
     }
 
     fileprivate func setupWidgetLayout() {
@@ -157,24 +158,72 @@ internal final class ContentController: UIPageViewController {
         return (ranges, texts)
     }
     
+    fileprivate func gotContentFromDataSource(chapter: Chapter) {
+        guard let `reader` = reader else {return}
+        
+        let result = renderTextView(chapter: chapter)
+        
+        let count = result.0.count
+        novelString = NSMutableAttributedString()
+        pages.removeAll()
+        
+        zip(result.0, result.1).enumerated().forEach { i, rt in
+            let r = rt.0
+            let t = rt.1
+            novelString.append(t)
+            pages.append(NovelReaderPageContent(reader: reader, range: r, text: t, pagesCount: count, pageIndex: i, chapterIndex: reader.currentProgress.index) { _ in
+                let progress = ReadProgress(index: reader.currentProgress.index, word: r.lowerBound)
+                reader.currentProgress = progress
+                reader.delegate?.novelReader(reader, updateProgress: reader.currentProgress)
+            })
+        }
+        
+        // 当进入书籍第一章时候插入书封
+        if reader.currentProgress.index == 0, let cover = reader.dataSource.novelReaderCover(for: reader) {
+            pages.insert(cover, at: 0)
+        }
+        
+        // 从数据源获取插页进行安插
+        
+        
+        // 根据阅读记录跳转到相应的页面
+        let goPage: NovelReaderPage
+        if reader.currentProgress.word == -1, let page = pages.last { // 1.跳转到章节的最后一页
+            goPage = page
+        }
+        else if reader.currentProgress.word == 0, let page = pages.first { // 2.跳转到章节的第一页
+            goPage = page
+
+        }
+        else if let page = pages.first (where: {
+            if let c = $0 as? NovelReaderPageContent {
+                return c.range.contains(reader.currentProgress.word)
+            } else {
+                return false
+            }
+        }) {                                                             // 3.跳转到阅读记录指定的页
+            goPage = page
+
+        }
+        else {                                                           // 4.以上均不满足跳到章节第一页
+            goPage = pages.first!
+
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.setViewControllers([goPage], direction: .forward, animated: false) { _ in
+                goPage.afterAppear?(goPage)
+            }
+        }
+    }
+    
     fileprivate func makeReaderPages() {
         guard let `reader` = reader else {return}
         if reader.currentProgress.index < 0 || reader.currentProgress.index >= reader.dataSource.numberOfChapters(in: reader) {
             fatalError("out of number of chapters!")
         }
         reader.dataSource.novelReader(reader, chapterForIndexAt: reader.currentProgress.index) { [weak self] chapter in
-            if let result = self?.renderTextView(chapter: chapter) {
-                zip(result.0, result.1).forEach { r, t in
-                    self?.novelString.append(t)
-                    self?.pages.append(NovelReaderPageContent(reader: reader, range: r, text: t) { _ in
-                        let progress = ReadProgress(index: self?.reader?.currentProgress.index ?? 0, word: r.upperBound)
-                        self?.reader?.delegate?.novelReader((self?.reader)!, updateProgress: progress)
-                    })
-                }
-                if let page = self?.pages.first {
-                    self?.setViewControllers([page], direction: .forward, animated: false, completion: nil)
-                }
-            }
+            self?.gotContentFromDataSource(chapter: chapter)
         }
     }
     
@@ -201,6 +250,10 @@ internal final class ContentController: UIPageViewController {
         
     }
     
+    deinit {
+        Swift.debugPrint("Debug: Deinit \(self)")
+    }
+    
     init(reader: NovelReader, transitionStyle style: UIPageViewController.TransitionStyle, navigationOrientation: UIPageViewController.NavigationOrientation, options: [UIPageViewController.OptionsKey : Any]? = nil) {
         self.reader = reader
         super.init(transitionStyle: style, navigationOrientation: navigationOrientation, options: options)
@@ -208,5 +261,56 @@ internal final class ContentController: UIPageViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let readerPage = viewController as? NovelReaderPage else { return nil }
+        guard let index = pages.firstIndex(of: readerPage) else { return nil }
+        if index != 0 {
+            return pages[index - 1]
+        }
+        guard let `reader` = reader else {return nil}
+        
+        if reader.currentProgress.index != 0 {
+            let loding = NovelReaderPageLoading(reader: reader) { [weak self] _ in
+                if reader.currentProgress.index != 0 {
+                    reader.currentProgress = ReadProgress(index: reader.currentProgress.index - 1, word: -1)
+                    self?.makeReaderPages()
+                }
+            }
+            return loding
+        } else {
+            return nil
+        }
+
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let readerPage = viewController as? NovelReaderPage else { return nil }
+        guard let index = pages.firstIndex(of: readerPage) else { return nil }
+        if index + 1 < pages.count {
+            return pages[index + 1]
+        }
+        guard let `reader` = reader else {return nil}
+        let loding = NovelReaderPageLoading(reader: reader) { [weak self] _ in
+            if reader.currentProgress.index + 1 < reader.dataSource.numberOfChapters(in: reader) {
+                reader.currentProgress = ReadProgress(index: reader.currentProgress.index + 1, word: 0)
+                self?.makeReaderPages()
+            } else {
+                reader.novelReaderExit(.end)
+            }
+        }
+        
+        return loding
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard finished,completed else {return}
+
+        guard let tv = viewControllers?.first as? NovelReaderPage else {return}
+        
+        tv.afterAppear?(tv)
+        
     }
 }

@@ -25,6 +25,10 @@ public final class NovelReaderPageContent: NovelReaderPage {
     var header: UIView? = nil
     var footer: UIView? = nil
     
+    var pagesCount: Int
+    var pageIndex: Int
+    var chapterIndex: Int
+    
     fileprivate func setupAppearance() {
 
     }
@@ -45,9 +49,9 @@ public final class NovelReaderPageContent: NovelReaderPage {
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
-        header = reader.dataSource.readerHeaders(in: reader)
+        header = reader.dataSource.readerHeaders(in: reader, countOfPages: pagesCount, AtPageIndex: pageIndex, andChapterIndex: chapterIndex)
         let headerHeight = reader.dataSource.readerHeadersHeight(in: reader)
-        footer = reader.dataSource.readerFooters(in: reader)
+        footer = reader.dataSource.readerFooters(in: reader, countOfPages: pagesCount, AtPageIndex: pageIndex, andChapterIndex: chapterIndex)
         let footerHeight = reader.dataSource.readerFootersHeight(in: reader)
         
         if let h = header {
@@ -55,7 +59,7 @@ public final class NovelReaderPageContent: NovelReaderPage {
             view.addSubview(h)
             NSLayoutConstraint.activate([
                 h.heightAnchor.constraint(equalToConstant: headerHeight),
-                h.topAnchor.constraint(equalTo: view.topAnchor),
+                h.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
                 h.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 h.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 h.bottomAnchor.constraint(equalTo: textView.topAnchor),
@@ -63,7 +67,7 @@ public final class NovelReaderPageContent: NovelReaderPage {
             ])
         } else {
             NSLayoutConstraint.activate([
-                textView.topAnchor.constraint(equalTo: view.topAnchor),
+                textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             ])
         }
         if let f = footer {
@@ -75,11 +79,11 @@ public final class NovelReaderPageContent: NovelReaderPage {
                 f.topAnchor.constraint(equalTo: textView.bottomAnchor),
                 f.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 f.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                f.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                f.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             ])
         } else {
             NSLayoutConstraint.activate([
-                textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             ])
         }
     }
@@ -90,10 +94,13 @@ public final class NovelReaderPageContent: NovelReaderPage {
         setupWidgetLayout()
         setupWidgetAction()
     }
-    
-    public init(reader: NovelReader, range: NSRange, text: NSAttributedString, afterAppear: NovelReaderPage.AfterAppearCall? = nil) {
+        
+    public init(reader: NovelReader, range: NSRange, text: NSAttributedString, pagesCount: Int, pageIndex: Int, chapterIndex: Int, afterAppear: NovelReaderPage.AfterAppearCall? = nil) {
         self.range = range
         self.text = text
+        self.pagesCount = pagesCount
+        self.pageIndex = pageIndex
+        self.chapterIndex = chapterIndex
         super.init(reader: reader, afterAppear: afterAppear)
     }
     

@@ -44,12 +44,17 @@ extension UIColor {
 
 
 public struct ColorSchema {
-    var fontColor: UIColor
-    var backColor: UIColor
+    public var fontColor: UIColor
+    public var backColor: UIColor
     
     public init() {
         fontColor = UIColor.fromString(hexString: "#2C2C2C")
         backColor = UIColor.fromString(hexString: "#F0D7AB")
+    }
+    
+    public init(fontColor: UIColor, backColor: UIColor) {
+        self.fontColor = fontColor
+        self.backColor = backColor
     }
 }
 

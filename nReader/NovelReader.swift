@@ -9,15 +9,14 @@ import UIKit
 
 public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     
-    var dataSource: NovelReaderDataSource
-    var delegate: NovelReaderDelegate?
-    var currentProgress: ReadProgress
-    var currentChapterIndex: Int
+    public var dataSource: NovelReaderDataSource
+    public var delegate: NovelReaderDelegate?
+    public var currentProgress: ReadProgress
     
     weak var menuView: NovelReaderMenuView?
     
     var contentController: ContentController?
-    var bannerController: BannerController?
+    var bannerController: UIViewController?
     
 
     fileprivate func setupAppearance() {
@@ -29,6 +28,22 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         tap.delegate = self
         view.addGestureRecognizer(tap)
+    }
+    
+    fileprivate func uninstallContentController() {
+        if let cc = contentController {
+            cc.removeFromParent()
+            cc.view.removeFromSuperview()
+        }
+        contentController = nil
+    }
+    
+    fileprivate func uninstallBannerController() {
+        if let bc = bannerController {
+            bc.removeFromParent()
+            bc.view.removeFromSuperview()
+        }
+        bannerController = nil
     }
     
     fileprivate func setupWidgetLayout() {
@@ -58,11 +73,11 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
                     cc.view.topAnchor.constraint(equalTo: bc.view.bottomAnchor),
                     cc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                     cc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                    cc.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                    cc.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 ])
             case .bottom, .none:
                 NSLayoutConstraint.activate([
-                    cc.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                    cc.view.topAnchor.constraint(equalTo: view.topAnchor),
                     cc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                     cc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                     cc.view.bottomAnchor.constraint(equalTo: bc.view.topAnchor),
@@ -73,10 +88,10 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
             }
         } else {
             NSLayoutConstraint.activate([
-                cc.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                cc.view.topAnchor.constraint(equalTo: view.topAnchor),
                 cc.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 cc.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                cc.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                cc.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         }
     }
@@ -106,11 +121,20 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
         setupWidgetAction()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.delegate?.novelReader(self, willOpenAt: currentProgress)
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.delegate?.novelReader(self, didOpenedAt: currentProgress)
+    }
+    
     public init(dataSource: NovelReaderDataSource, delegate: NovelReaderDelegate? = nil, from: ReadProgress = .head) {
         self.dataSource = dataSource
         self.delegate = delegate
         self.currentProgress = from
-        self.currentChapterIndex = self.currentProgress.index
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .overFullScreen
     }
@@ -152,17 +176,12 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     
     public func novelReaderExit(_ exitType: ExitType) {
         delegate?.novelReader(self, willExitAt: currentProgress, becauseOf: exitType)
+     
+        uninstallContentController()
+        uninstallBannerController()
         
         self.dismiss(animated: true) {
             self.delegate?.novelReader(self, didExitedAt: self.currentProgress, becauseOf: exitType)
         }
-    }
-    
-    public func currentPagesCount() -> Int {
-        return contentController?.pagesCount ?? 0
-    }
-    
-    public func currentPageIndex() -> Int {
-        return contentController?.pageIndex ?? 0
     }
 }

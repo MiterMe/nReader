@@ -26,7 +26,7 @@ public protocol NovelReaderDelegate {
 }
 
 
-extension NovelReaderDelegate {
+public extension NovelReaderDelegate {
     
     func novelReader(_ reader: NovelReader, willOpenAt progress: ReadProgress) {
         

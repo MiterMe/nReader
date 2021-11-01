@@ -28,6 +28,7 @@ public final class NovelReaderPageLoading: NovelReaderPage {
     }
     
     fileprivate func setupWidgetLayout() {
+        indicator.startAnimating()
         view.addSubview(indicator)
         
         NSLayoutConstraint.activate([

@@ -34,19 +34,21 @@ public final class NovelReaderPageContent: NovelReaderPage {
     }
     
     fileprivate func setupWidgetLayout() {
+        guard let `reader` = reader else {return}
         
+        textView.backgroundColor = reader.dataSource.colorSchema(for: reader).backColor
         textView.attributedText = text
         
         view.addSubview(textView)
         NSLayoutConstraint.activate([
-            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
-        header = reader?.dataSource.readerHeaders(in: reader!)
-        let headerHeight = reader?.dataSource.readerHeadersHeight(in: reader!) ?? 0
-        footer = reader?.dataSource.readerFooters(in: reader!)
-        let footerHeight = reader?.dataSource.readerFootersHeight(in: reader!) ?? 0
+        header = reader.dataSource.readerHeaders(in: reader)
+        let headerHeight = reader.dataSource.readerHeadersHeight(in: reader)
+        footer = reader.dataSource.readerFooters(in: reader)
+        let footerHeight = reader.dataSource.readerFootersHeight(in: reader)
         
         if let h = header {
             h.translatesAutoresizingMaskIntoConstraints = false
@@ -80,9 +82,6 @@ public final class NovelReaderPageContent: NovelReaderPage {
                 textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         }
-        
-        
-        
     }
     
     public override func viewDidLoad() {

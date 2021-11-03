@@ -13,14 +13,19 @@ public protocol NovelReaderDataSource {
     /// 返回总章节数
     func numberOfChapters(in reader: NovelReader) -> Int
     
-    /// 根据index获取章节对象（异步），获取后调用callback
+    /// 根据chapter index获取章节对象（异步），获取后调用callback
     func novelReader(_ reader: NovelReader, chapterForIndexAt index: Int, afterObtained callback: @escaping (Chapter)->Void)
     
-    /// 根据index获取对应的插页（广告页）（异步），获取后调用callback
-    func novelReaderIllustration(_ reader: NovelReader, chapterForIndexAt index: Int, afterObtained callback: @escaping ([NovelReaderPage]?)->Void)
+    /// 根据chapter index以及向下、向上翻页的次数以及当前要展示的页来获取对应的插页（广告页）此方法不能阻塞，提前获取好广告素材
+    func novelReaderIllustration(_ reader: NovelReader,
+                                 chapterForIndexAt index: Int,  //章节index
+                                 countOfPages pagesCount: Int,  //本章共多少页
+                                 AtPageIndex pageIndex: Int,    //当前要展示第几页（以0开始）
+                                 pageDownTimes: Int)            //目前向后翻页次数
+                                 -> NovelReaderPageIllustration?
     
     /// 返回阅读器打开后显示的书面封皮页面
-    func novelReaderCover(for reader: NovelReader) -> NovelReaderPage?
+    func novelReaderCover(for reader: NovelReader) -> NovelReaderPageCover?
     
     /// 返回阅读器中banner广告位置
     func bannerPosition(for reader: NovelReader) -> BannerPosition
@@ -60,11 +65,17 @@ public protocol NovelReaderDataSource {
 public extension NovelReaderDataSource {
     
     
-    func novelReaderIllustration(_ reader: NovelReader, chapterForIndexAt index: Int, afterObtained callback: @escaping ([NovelReaderPage]?)->Void) {
-        callback(nil)
+    func novelReaderIllustration(_ reader: NovelReader,
+                                 chapterForIndexAt index: Int,
+                                 countOfPages pagesCount: Int,
+                                 AtPageIndex pageIndex: Int,
+                                 pageDownTimes: Int) -> NovelReaderPageIllustration? {
+        
+        return nil
+        
     }
     
-    func novelReaderCover(for reader: NovelReader) -> NovelReaderPage? {
+    func novelReaderCover(for reader: NovelReader) -> NovelReaderPageCover? {
         return nil
     }
     

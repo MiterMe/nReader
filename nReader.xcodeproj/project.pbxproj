@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5228563027328D8E0085EB29 /* NovelReaderPageIllustration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5228562E27328D8E0085EB29 /* NovelReaderPageIllustration.swift */; };
+		5228563127328D8E0085EB29 /* NovelReaderPageCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5228562F27328D8E0085EB29 /* NovelReaderPageCover.swift */; };
 		52C14E71271EC8CB009C6609 /* NovelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14E70271EC8CB009C6609 /* NovelReader.swift */; };
 		52C14E93271EDA93009C6609 /* NovelReaderDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14E92271EDA93009C6609 /* NovelReaderDataSource.swift */; };
 		52C14E95271EDAAA009C6609 /* NovelReaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14E94271EDAAA009C6609 /* NovelReaderDelegate.swift */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5228562E27328D8E0085EB29 /* NovelReaderPageIllustration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NovelReaderPageIllustration.swift; sourceTree = "<group>"; };
+		5228562F27328D8E0085EB29 /* NovelReaderPageCover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NovelReaderPageCover.swift; sourceTree = "<group>"; };
 		529F249D271EC1B8009510D7 /* nReader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = nReader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52C14E70271EC8CB009C6609 /* NovelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReader.swift; sourceTree = "<group>"; };
 		52C14E92271EDA93009C6609 /* NovelReaderDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderDataSource.swift; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 		52C14EB027229BBF009C6609 /* NovelReaderPages */ = {
 			isa = PBXGroup;
 			children = (
+				5228562F27328D8E0085EB29 /* NovelReaderPageCover.swift */,
+				5228562E27328D8E0085EB29 /* NovelReaderPageIllustration.swift */,
 				52C14EAA27226DD6009C6609 /* NovelReaderPage.swift */,
 				52C14EAE27229BB0009C6609 /* NovelReaderPageLoading.swift */,
 				52C14EB32722BFE3009C6609 /* NovelReaderPageContent.swift */,
@@ -184,6 +190,7 @@
 				52C14EAD27226F94009C6609 /* ColorSchema.swift in Sources */,
 				52C14EAF27229BB0009C6609 /* NovelReaderPageLoading.swift in Sources */,
 				52C14E99271FC98A009C6609 /* BannerPosition.swift in Sources */,
+				5228563127328D8E0085EB29 /* NovelReaderPageCover.swift in Sources */,
 				52C14EA327200D10009C6609 /* NovelReaderDefaultMenuView.swift in Sources */,
 				52C14EB42722BFE3009C6609 /* NovelReaderPageContent.swift in Sources */,
 				52C14E71271EC8CB009C6609 /* NovelReader.swift in Sources */,
@@ -193,6 +200,7 @@
 				52C14E95271EDAAA009C6609 /* NovelReaderDelegate.swift in Sources */,
 				52C14E9B271FF014009C6609 /* ReadProgress.swift in Sources */,
 				52C14E9F271FFE01009C6609 /* PageTurningType.swift in Sources */,
+				5228563027328D8E0085EB29 /* NovelReaderPageIllustration.swift in Sources */,
 				52C14E97271EDC66009C6609 /* Chapter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

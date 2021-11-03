@@ -29,6 +29,10 @@ public final class NovelReaderPageContent: NovelReaderPage {
     var pageIndex: Int
     var chapterIndex: Int
     
+    override var pageType: NovelReaderType {
+        .content
+    }
+    
     fileprivate func setupAppearance() {
 
     }

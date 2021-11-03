@@ -158,6 +158,39 @@ internal final class ContentController: UIPageViewController, UIPageViewControll
         return (ranges, texts)
     }
     
+    fileprivate func positionWhereToGo() -> (NovelReaderPage, Int) {
+        guard let `reader` = reader else { fatalError() }
+        let goPage: NovelReaderPage
+        let goPageIndex: Int
+        if reader.currentProgress.word == -1, let page = pages.last { // 1.跳转到章节的最后一页
+            goPage = page
+            goPageIndex = pages.count - 1
+        }
+        else if reader.currentProgress.word == 0, let page = pages.first { // 2.跳转到章节的第一页
+            goPage = page
+            goPageIndex = 0
+
+        }
+        else if let pageIndex = pages.firstIndex (where: {
+            if let c = $0 as? NovelReaderPageContent {
+                return c.range.contains(reader.currentProgress.word)
+            } else {
+                return false
+            }
+        }) {                                                             // 3.跳转到阅读记录指定的页
+            goPage = pages[pageIndex]
+            goPageIndex = pageIndex
+
+        }
+        else {                                                           // 4.以上均不满足跳到章节第一页
+            goPage = pages.first!
+            goPageIndex = 0
+
+        }
+        
+        return (goPage, goPageIndex)
+    }
+    
     fileprivate func gotContentFromDataSource(chapter: Chapter) {
         guard let `reader` = reader else {return}
         
@@ -183,33 +216,8 @@ internal final class ContentController: UIPageViewController, UIPageViewControll
             pages.insert(cover, at: 0)
         }
         
-        // 从数据源获取插页进行安插
-        
-        
         // 根据阅读记录跳转到相应的页面
-        let goPage: NovelReaderPage
-        if reader.currentProgress.word == -1, let page = pages.last { // 1.跳转到章节的最后一页
-            goPage = page
-        }
-        else if reader.currentProgress.word == 0, let page = pages.first { // 2.跳转到章节的第一页
-            goPage = page
-
-        }
-        else if let page = pages.first (where: {
-            if let c = $0 as? NovelReaderPageContent {
-                return c.range.contains(reader.currentProgress.word)
-            } else {
-                return false
-            }
-        }) {                                                             // 3.跳转到阅读记录指定的页
-            goPage = page
-
-        }
-        else {                                                           // 4.以上均不满足跳到章节第一页
-            goPage = pages.first!
-
-        }
-        
+        let (goPage, _) = positionWhereToGo()
         DispatchQueue.main.async { [weak self] in
             self?.setViewControllers([goPage], direction: .forward, animated: false) { _ in
                 goPage.afterAppear?(goPage)
@@ -265,13 +273,17 @@ internal final class ContentController: UIPageViewController, UIPageViewControll
     
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        view.isUserInteractionEnabled = false
+        defer { view.isUserInteractionEnabled = true }
+        
+        guard let `reader` = reader else {return nil}
         guard let readerPage = viewController as? NovelReaderPage else { return nil }
         guard let index = pages.firstIndex(of: readerPage) else { return nil }
+        
         if index != 0 {
             return pages[index - 1]
         }
-        guard let `reader` = reader else {return nil}
-        
+    
         if reader.currentProgress.index != 0 {
             let loding = NovelReaderPageLoading(reader: reader) { [weak self] _ in
                 if reader.currentProgress.index != 0 {
@@ -287,12 +299,24 @@ internal final class ContentController: UIPageViewController, UIPageViewControll
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        view.isUserInteractionEnabled = false
+        defer { view.isUserInteractionEnabled = true }
+        
+        guard let `reader` = reader else {return nil}
         guard let readerPage = viewController as? NovelReaderPage else { return nil }
         guard let index = pages.firstIndex(of: readerPage) else { return nil }
+        
+        let cCount = pages.filter({$0.pageType == .illustration}).count
+        if cCount == 0 {
+            if let illustration = reader.dataSource.novelReaderIllustration(reader, chapterForIndexAt: reader.currentProgress.index, countOfPages: cCount, AtPageIndex: index, pageDownTimes: reader.turnPageTimesNxt + 1) {
+                pages.insert(illustration, at: index + 1)
+            }
+        }
+        
         if index + 1 < pages.count {
             return pages[index + 1]
         }
-        guard let `reader` = reader else {return nil}
+        
         let loding = NovelReaderPageLoading(reader: reader) { [weak self] _ in
             if reader.currentProgress.index + 1 < reader.dataSource.numberOfChapters(in: reader) {
                 reader.currentProgress = ReadProgress(index: reader.currentProgress.index + 1, word: 0)
@@ -301,16 +325,31 @@ internal final class ContentController: UIPageViewController, UIPageViewControll
                 reader.novelReaderExit(.end)
             }
         }
-        
         return loding
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        guard finished,completed else {return}
-
-        guard let tv = viewControllers?.first as? NovelReaderPage else {return}
+        view.isUserInteractionEnabled = false
+        defer { view.isUserInteractionEnabled = true }
         
+        guard let `reader` = reader else {return}
+        guard finished,completed else {return}
+        
+        guard let tv = viewControllers?.first as? NovelReaderPage else {return}
         tv.afterAppear?(tv)
         
+        guard let pv = previousViewControllers.first as? NovelReaderPage else {return}
+        switch pv.pageType {
+        case .content:
+            if let pindex = pages.firstIndex(of: pv), let tindex = pages.firstIndex(of: tv) {
+                if pindex < tindex {
+                    reader.turnPageTimesNxt += 1
+                }
+            }
+        case .illustration:
+            pages.removeAll { $0 == pv }
+        default:
+            break
+        }
     }
 }

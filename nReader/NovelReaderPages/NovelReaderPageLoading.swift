@@ -10,6 +10,10 @@ import UIKit
 
 public final class NovelReaderPageLoading: NovelReaderPage {
     
+    override var pageType: NovelReaderType {
+        .loading
+    }
+    
     lazy var indicator: UIActivityIndicatorView = {
         let widget = UIActivityIndicatorView()
         widget.translatesAutoresizingMaskIntoConstraints = false

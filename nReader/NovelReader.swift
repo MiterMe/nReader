@@ -18,6 +18,7 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     var contentController: ContentController?
     var bannerController: UIViewController?
     
+    var turnPageTimesNxt: Int = 0
 
     fileprivate func setupAppearance() {
         view.backgroundColor = dataSource.colorSchema(for: self).backColor

@@ -7,7 +7,19 @@
 
 import UIKit
 
+enum NovelReaderType {
+    case loading
+    case content
+    case illustration
+    case cover
+    case base
+}
+
 open class NovelReaderPage: UIViewController {
+    
+    internal var pageType: NovelReaderType {
+        .base
+    }
 
     public typealias AfterAppearCall = (NovelReaderPage) -> Void
     

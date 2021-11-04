@@ -18,7 +18,6 @@ public final class NovelReaderPageContent: NovelReaderPage {
         widget.isScrollEnabled = true
         widget.isEditable = false
         widget.isSelectable = false
-        
         return widget
     }()
     

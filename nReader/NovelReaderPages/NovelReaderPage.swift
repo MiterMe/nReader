@@ -34,7 +34,7 @@ open class NovelReaderPage: UIViewController {
     }
     
     fileprivate func setupWidgetAction() {
-
+        view.isUserInteractionEnabled = false
     }
     
     fileprivate func setupWidgetLayout() {

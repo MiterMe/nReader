@@ -13,13 +13,17 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     public var delegate: NovelReaderDelegate?
     public var currentProgress: ReadProgress
     
-    weak var menuView: NovelReaderMenuView?
+    var menuView: NovelReaderMenuView?
     
     var contentController: ContentController?
     var bannerController: UIViewController?
     
     var turnPageTimesNxt: Int = 0
 
+    public override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     fileprivate func setupAppearance() {
         view.backgroundColor = dataSource.colorSchema(for: self).backColor
         navigationController?.isNavigationBarHidden = true
@@ -137,7 +141,7 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
         self.delegate = delegate
         self.currentProgress = from
         super.init(nibName: nil, bundle: nil)
-        self.modalPresentationStyle = .overFullScreen
+        self.modalPresentationStyle = .fullScreen
     }
     
     required init?(coder: NSCoder) {
@@ -149,28 +153,45 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @objc fileprivate func tapAction(_ sender: Any) {
-        
+        openReaderMenu()
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if view == touch.view {
-            return true
-        } else {
-            return false
+        let touchClass = NSStringFromClass((touch.view?.classForCoder)!)
+        if let v = touch.view {
+            Swift.debugPrint("Debug: Reader 点击事件过滤: <\(touchClass) : \(String(format: "%p", v))>")
         }
+        
+        if touch.view == view {
+            return true
+        }
+        
+        if touchClass.contains("UIPageViewControllerContentView") {
+            return true
+        }
+        return false
     }
     
 // MARK: - 对外提供的接口
     
     public func openReaderMenu() {
-        if let menu = dataSource.menuView(for: self) {
-            menuView = menu
-        } else {
-            let menu = NovelReaderDefaultMenuView(self)
-            menuView = menu
+        if menuView == nil {
+            if let menu = dataSource.menuView(for: self) {
+                menuView = menu
+            } else {
+                menuView = NovelReaderDefaultMenuView(self)
+            }
         }
         UIView.animate(withDuration: 0.5) {
-            self.view.addSubview(self.menuView!)
+            if let mv = self.menuView {
+                self.view.addSubview(mv)
+                NSLayoutConstraint.activate([
+                    mv.topAnchor.constraint(equalTo: self.view.topAnchor),
+                    mv.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+                    mv.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+                    mv.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+                ])
+            }
         }
         
     }

@@ -13,9 +13,9 @@ public final class NovelReaderDefaultMenuView: NovelReaderMenuView {
     let topView: UIView = {
         let widget = UIView()
         widget.translatesAutoresizingMaskIntoConstraints = false
-        widget.backgroundColor = .black.withAlphaComponent(0.8)
+        widget.backgroundColor = .black.withAlphaComponent(0.9)
         NSLayoutConstraint.activate([
-            widget.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.height * 0.2).rounded(.down))
+            widget.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.height * 0.1).rounded(.down))
         ])
         return widget
     }()
@@ -23,9 +23,9 @@ public final class NovelReaderDefaultMenuView: NovelReaderMenuView {
     let bottomView: UIView = {
         let widget = UIView()
         widget.translatesAutoresizingMaskIntoConstraints = false
-        widget.backgroundColor = .black.withAlphaComponent(0.8)
+        widget.backgroundColor = .black.withAlphaComponent(0.9)
         NSLayoutConstraint.activate([
-            widget.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.height * 0.4).rounded(.down))
+            widget.heightAnchor.constraint(equalToConstant: (UIScreen.main.bounds.height * 0.2).rounded(.down))
         ])
         return widget
     }()
@@ -55,6 +55,8 @@ public final class NovelReaderDefaultMenuView: NovelReaderMenuView {
     
     public override func setupWidgetsLayout() {
         super.setupWidgetsLayout()
+        
+        self.backgroundColor = .black.withAlphaComponent(0.1)
         
         topView.addSubview(exitBtn)
         self.addSubview(topView)

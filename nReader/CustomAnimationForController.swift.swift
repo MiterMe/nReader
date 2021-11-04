@@ -8,9 +8,16 @@
 import Foundation
 import UIKit
 
+public enum CustomDirection {
+    case left
+    case right
+    case up
+    case down
+}
+
 public final class ModalOpenAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 1
+        return 0.5
     }
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -28,8 +35,11 @@ public final class ModalOpenAnimator: NSObject, UIViewControllerAnimatedTransiti
 }
 
 public final class ModalCloseAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+    
+    var direction: CustomDirection = .left
+    
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3
+        return 0.5
     }
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -48,7 +58,17 @@ public final class ModalCloseAnimator: NSObject, UIViewControllerAnimatedTransit
         let transitionDuration = self.transitionDuration(using: transitionContext)
         
         UIView.animate(withDuration: transitionDuration) {
-            fromView.frame = CGRect(x: 0 - fromView.frame.width, y: fromView.frame.origin.y, width: fromView.frame.width, height: fromView.frame.height)
+            switch self.direction {
+            case .left:
+                fromView.frame = CGRect(x: 0 - fromView.frame.width, y: fromView.frame.origin.y, width: fromView.frame.width, height: fromView.frame.height)
+            case .right:
+                fromView.frame = CGRect(x: fromView.frame.width, y: fromView.frame.origin.y, width: fromView.frame.width, height: fromView.frame.height)
+            case .up:
+                fromView.frame = CGRect(x: fromView.frame.origin.x, y: 0 - fromView.frame.height, width: fromView.frame.width, height: fromView.frame.height)
+            case .down:
+                fromView.frame = CGRect(x: fromView.frame.origin.x, y: fromView.frame.height, width: fromView.frame.width, height: fromView.frame.height)
+            }
+            
             
         } completion: { finished in
             if let v = containerView.subviews.first(where: { $0 == fromView }) {
@@ -58,13 +78,22 @@ public final class ModalCloseAnimator: NSObject, UIViewControllerAnimatedTransit
             transitionContext.completeTransition(!wasCancelled)
         }
     }
+    
+    public init(direction: CustomDirection) {
+        self.direction = direction
+        super.init()
+    }
 }
 
 public final class CustomAnimationTransitioning: NSObject, UIViewControllerTransitioningDelegate {
+    
+    var direction: CustomDirection = .left
+    
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return ModalOpenAnimator()
     }
+    
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return ModalCloseAnimator()
+        return ModalCloseAnimator(direction: direction)
     }
 }

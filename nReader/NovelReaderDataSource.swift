@@ -52,7 +52,7 @@ public protocol NovelReaderDataSource {
     func pageTurning(for reader: NovelReader) -> PageTurningType
     
     /// 返回阅读器翻页效果的类型
-    func menuView(for reader: NovelReader) -> NovelReaderMenuView?
+    func menuView(for reader: NovelReader) -> NovelReaderPopedView?
     
     /// 返回阅读器的配色
     func colorSchema(for reader: NovelReader) -> ColorSchema
@@ -111,7 +111,7 @@ public extension NovelReaderDataSource {
         return .horizontalCurl
     }
     
-    func menuView(for reader: NovelReader) -> NovelReaderMenuView? {
+    func menuView(for reader: NovelReader) -> NovelReaderPopedView? {
         return nil
     }
     

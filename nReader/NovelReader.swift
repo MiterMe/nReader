@@ -13,8 +13,6 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     public var delegate: NovelReaderDelegate?
     public var currentProgress: ReadProgress
     
-    var menuView: NovelReaderMenuView?
-    
     var contentController: ContentController?
     var bannerController: UIViewController?
     
@@ -153,7 +151,7 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @objc fileprivate func tapAction(_ sender: Any) {
-        openReaderMenu()
+        openPopedView(self.dataSource.menuView(for: self))
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -174,16 +172,9 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     
 // MARK: - 对外提供的接口
     
-    public func openReaderMenu() {
-        if menuView == nil {
-            if let menu = dataSource.menuView(for: self) {
-                menuView = menu
-            } else {
-                menuView = NovelReaderDefaultMenuView(self)
-            }
-        }
+    public func openPopedView(_ popView: NovelReaderPopedView?) {
         UIView.animate(withDuration: 0.5) {
-            if let mv = self.menuView {
+            if let mv = popView {
                 self.view.addSubview(mv)
                 NSLayoutConstraint.activate([
                     mv.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -205,5 +196,11 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
         self.dismiss(animated: true) {
             self.delegate?.novelReader(self, didExitedAt: self.currentProgress, becauseOf: exitType)
         }
+    }
+    
+    public func reloadReader() {
+        uninstallContentController()
+        uninstallBannerController()
+        setupWidgetLayout()
     }
 }

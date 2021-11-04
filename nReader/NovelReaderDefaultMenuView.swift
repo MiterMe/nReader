@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public final class NovelReaderDefaultMenuView: NovelReaderMenuView {
+public final class NovelReaderDefaultMenuView: NovelReaderPopedView {
     
     let topView: UIView = {
         let widget = UIView()
@@ -47,10 +47,41 @@ public final class NovelReaderDefaultMenuView: NovelReaderMenuView {
 
     }
     
+    let reloadBtn: UIButton = {
+        let widget = UIButton()
+        widget.translatesAutoresizingMaskIntoConstraints = false
+        widget.setTitle("reload reader", for: .normal)
+        widget.backgroundColor = .systemRed
+        return widget
+    }()
+    
+    @objc func reloadBtnAction(_ sender: Any) {
+        reader?.reloadReader()
+    }
+    
+    
+    let catelogBtn: UIButton = {
+        let widget = UIButton()
+        widget.translatesAutoresizingMaskIntoConstraints = false
+        widget.setTitle("open catelog", for: .normal)
+        widget.backgroundColor = .systemBlue
+        return widget
+    }()
+    
+    @objc func catelogBtnAction(_ sender: Any) {
+        UIView.animate(withDuration: 0.5) {
+            self.removeFromSuperview()
+        } completion: { _ in
+            self.reader?.openPopedView(NovelReaderDefaultCatelogView(self.reader!))
+        }
+    }
+    
     public override func setupWidgetsAction() {
         super.setupWidgetsAction()
         
         exitBtn.addTarget(self, action: #selector(exitBtnAction(_:)), for: .touchUpInside)
+        reloadBtn.addTarget(self, action: #selector(reloadBtnAction(_:)), for: .touchUpInside)
+        catelogBtn.addTarget(self, action: #selector(catelogBtnAction(_:)), for: .touchUpInside)
     }
     
     public override func setupWidgetsLayout() {
@@ -58,13 +89,30 @@ public final class NovelReaderDefaultMenuView: NovelReaderMenuView {
         
         self.backgroundColor = .black.withAlphaComponent(0.1)
         
+        let bstack: UIStackView = {
+            let widget = UIStackView()
+            widget.translatesAutoresizingMaskIntoConstraints = false
+            widget.axis = .horizontal
+            widget.distribution = .equalSpacing
+            widget.alignment = .fill
+            widget.spacing = 50
+            return widget
+        }()
+        
+        bstack.addArrangedSubview(catelogBtn)
+        bstack.addArrangedSubview(reloadBtn)
+        
         topView.addSubview(exitBtn)
+        bottomView.addSubview(bstack)
         self.addSubview(topView)
         self.addSubview(bottomView)
         
         NSLayoutConstraint.activate([
             exitBtn.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
             exitBtn.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 20),
+            
+            bstack.centerXAnchor.constraint(equalTo: bottomView.centerXAnchor),
+            bstack.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor),
             
             topView.topAnchor.constraint(equalTo: self.topAnchor),
             topView.leadingAnchor.constraint(equalTo: self.leadingAnchor),

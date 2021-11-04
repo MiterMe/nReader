@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class NovelReaderMenuView: UIView {
+open class NovelReaderPopedView: UIView {
     
     weak var reader: NovelReader?
     
@@ -45,7 +45,7 @@ open class NovelReaderMenuView: UIView {
     }
 }
 
-extension NovelReaderMenuView: UIGestureRecognizerDelegate {
+extension NovelReaderPopedView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if self == touch.view {
             return true

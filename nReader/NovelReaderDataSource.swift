@@ -24,6 +24,9 @@ public protocol NovelReaderDataSource {
                                  pageDownTimes: Int)            //目前向后翻页次数
                                  -> NovelReaderPageIllustration?
     
+    /// 返回阅读器打开弹出广告
+    func novelReaderPopedIllustration(_ reader: NovelReader) -> NovelReaderIllustrationController?
+    
     /// 返回阅读器打开后显示的书面封皮页面
     func novelReaderCover(for reader: NovelReader) -> NovelReaderPageCover?
     
@@ -74,6 +77,11 @@ public extension NovelReaderDataSource {
         return nil
         
     }
+    
+    func novelReaderPopedIllustration(_ reader: NovelReader) -> NovelReaderIllustrationController? {
+        return nil
+    }
+
     
     func novelReaderCover(for reader: NovelReader) -> NovelReaderPageCover? {
         return nil

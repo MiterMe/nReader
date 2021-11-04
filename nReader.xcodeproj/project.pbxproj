@@ -10,6 +10,8 @@
 		5228563027328D8E0085EB29 /* NovelReaderPageIllustration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5228562E27328D8E0085EB29 /* NovelReaderPageIllustration.swift */; };
 		5228563127328D8E0085EB29 /* NovelReaderPageCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5228562F27328D8E0085EB29 /* NovelReaderPageCover.swift */; };
 		52A0F2C32733800100CAEA95 /* NovelReaderDefaultCatelogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A0F2C22733800100CAEA95 /* NovelReaderDefaultCatelogView.swift */; };
+		52A0F2C52733CAEB00CAEA95 /* CustomAnimationForController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A0F2C42733CAEB00CAEA95 /* CustomAnimationForController.swift.swift */; };
+		52A0F2C72733CE9700CAEA95 /* NovelReaderIllustrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A0F2C62733CE9700CAEA95 /* NovelReaderIllustrationController.swift */; };
 		52C14E71271EC8CB009C6609 /* NovelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14E70271EC8CB009C6609 /* NovelReader.swift */; };
 		52C14E93271EDA93009C6609 /* NovelReaderDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14E92271EDA93009C6609 /* NovelReaderDataSource.swift */; };
 		52C14E95271EDAAA009C6609 /* NovelReaderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C14E94271EDAAA009C6609 /* NovelReaderDelegate.swift */; };
@@ -32,6 +34,8 @@
 		5228562F27328D8E0085EB29 /* NovelReaderPageCover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NovelReaderPageCover.swift; sourceTree = "<group>"; };
 		529F249D271EC1B8009510D7 /* nReader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = nReader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52A0F2C22733800100CAEA95 /* NovelReaderDefaultCatelogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderDefaultCatelogView.swift; sourceTree = "<group>"; };
+		52A0F2C42733CAEB00CAEA95 /* CustomAnimationForController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnimationForController.swift.swift; sourceTree = "<group>"; };
+		52A0F2C62733CE9700CAEA95 /* NovelReaderIllustrationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderIllustrationController.swift; sourceTree = "<group>"; };
 		52C14E70271EC8CB009C6609 /* NovelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReader.swift; sourceTree = "<group>"; };
 		52C14E92271EDA93009C6609 /* NovelReaderDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderDataSource.swift; sourceTree = "<group>"; };
 		52C14E94271EDAAA009C6609 /* NovelReaderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NovelReaderDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +97,8 @@
 				52C14E9C271FF7B5009C6609 /* ExitType.swift */,
 				52C14E9E271FFE01009C6609 /* PageTurningType.swift */,
 				52C14EAC27226F94009C6609 /* ColorSchema.swift */,
+				52A0F2C42733CAEB00CAEA95 /* CustomAnimationForController.swift.swift */,
+				52A0F2C62733CE9700CAEA95 /* NovelReaderIllustrationController.swift */,
 			);
 			path = nReader;
 			sourceTree = "<group>";
@@ -193,12 +199,14 @@
 				52C14EAD27226F94009C6609 /* ColorSchema.swift in Sources */,
 				52C14EAF27229BB0009C6609 /* NovelReaderPageLoading.swift in Sources */,
 				52A0F2C32733800100CAEA95 /* NovelReaderDefaultCatelogView.swift in Sources */,
+				52A0F2C72733CE9700CAEA95 /* NovelReaderIllustrationController.swift in Sources */,
 				52C14E99271FC98A009C6609 /* BannerPosition.swift in Sources */,
 				5228563127328D8E0085EB29 /* NovelReaderPageCover.swift in Sources */,
 				52C14EA327200D10009C6609 /* NovelReaderDefaultMenuView.swift in Sources */,
 				52C14EB42722BFE3009C6609 /* NovelReaderPageContent.swift in Sources */,
 				52C14E71271EC8CB009C6609 /* NovelReader.swift in Sources */,
 				52C14EA1272008AF009C6609 /* NovelReaderPopedView.swift in Sources */,
+				52A0F2C52733CAEB00CAEA95 /* CustomAnimationForController.swift.swift in Sources */,
 				52C14EA527201E07009C6609 /* ContentController.swift in Sources */,
 				52C14E9D271FF7B5009C6609 /* ExitType.swift in Sources */,
 				52C14E95271EDAAA009C6609 /* NovelReaderDelegate.swift in Sources */,

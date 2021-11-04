@@ -132,6 +132,9 @@ public final class NovelReader: UIViewController, UIGestureRecognizerDelegate {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.delegate?.novelReader(self, didOpenedAt: currentProgress)
+        if let poped = dataSource.novelReaderPopedIllustration(self) {
+            present(poped, animated: true)
+        }
     }
     
     public init(dataSource: NovelReaderDataSource, delegate: NovelReaderDelegate? = nil, from: ReadProgress = .head) {

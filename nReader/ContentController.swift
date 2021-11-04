@@ -126,13 +126,9 @@ internal final class ContentController: UIPageViewController, UIPageViewControll
         case .top:
             textAreaSizeHeight -= max(reader.dataSource.bannerHeight(for: reader), usedAreaInsets.top)
             textAreaSizeHeight -= usedAreaInsets.bottom
-        case .bottom:
+        case .bottom, .none:
             textAreaSizeHeight -= usedAreaInsets.top
             textAreaSizeHeight -= max(reader.dataSource.bannerHeight(for: reader), usedAreaInsets.bottom)
-        case .none:
-            textAreaSizeHeight -= usedAreaInsets.top
-            textAreaSizeHeight -= usedAreaInsets.bottom
-            break
         }
         textAreaSizeHeight -= reader.dataSource.readerHeadersHeight(in: reader)
         textAreaSizeHeight -= reader.dataSource.readerFootersHeight(in: reader)
